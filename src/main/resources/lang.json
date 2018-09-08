@@ -1,0 +1,27 @@
+{
+  "general": {
+    "help": [
+      "&7&m-----------------------------------------------------",
+      "&6&lUseful Information",
+      " &7» &c&lWebsite&7: &f${website}",
+      " &7» &c&lTwitter&7: &f${website}/twitter",
+      " &7» &c&lDiscord&7: &f${website}/discord",
+      " ",
+      "&6&lGeneral Commands",
+      " &7» &c/report <player> <reason> &7- &fReport a player",
+      " &7» &c/request <reason> &7- &fRequest staff-assistance",
+      "&7&m-----------------------------------------------------"
+    ],
+
+    "join": [
+      "&7&m-----------------------------------------------------",
+      "&fWelcome to the &6&lOrigin &6Network&f, ${player}&f!",
+      " ",
+      " &7» &c&lWebsite&7: &f${website}",
+      " &7» &c&lTwitter&7: &f${website}/twitter",
+      " &7» &c&lDiscord&7: &f${website}/discord",
+      " ",
+      "&7&m-----------------------------------------------------"
+    ]
+  }
+}
