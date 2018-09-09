@@ -5,8 +5,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 import win.crune.origin.config.ConfigHandler;
 import win.crune.origin.database.mongo.MongoHandler;
 import win.crune.origin.database.redis.RedisHandler;
+import win.crune.origin.environment.ServerHandler;
 import win.crune.origin.handler.Handler;
 import win.crune.origin.profile.ProfileHandler;
+import win.crune.origin.rank.RankHandler;
 import win.crune.origin.store.Store;
 import win.crune.origin.store.Stores;
 import win.crune.redismessenger.impl.SimpleRedisMessenger;
@@ -32,7 +34,8 @@ public class Origin extends JavaPlugin implements OriginAPI {
 
         Arrays.asList(
                 new ConfigHandler(), new ProfileHandler(),
-                new RedisHandler(), new MongoHandler()
+                new RedisHandler(), new MongoHandler(),
+                new RankHandler(), new ServerHandler()
         ).forEach(this::registerHandler);
     }
 

@@ -7,7 +7,8 @@
       "&7» &fFollow us on Twitter &b@Origin&f!"
     ],
     "id": "Hub-1",
-    "group": "Hub"
+    "group": "Hub",
+    "stage": "Development"
   },
 
   "databases": {

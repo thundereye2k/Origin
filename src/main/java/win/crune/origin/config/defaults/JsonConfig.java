@@ -117,6 +117,12 @@ public class JsonConfig implements Config {
             String[] parts = path.split("\\.");
 
             LinkedTreeMap linkedTreeMap = (LinkedTreeMap) map.get(parts[0]);
+
+            if (parts.length > 2) {
+                LinkedTreeMap linkedTreeMap2 = (LinkedTreeMap) linkedTreeMap.get(parts[1]);
+                return (T) linkedTreeMap2.get(parts[2]);
+            }
+
             return (T) linkedTreeMap.get(parts[1]);
         }
 
