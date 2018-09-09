@@ -41,7 +41,7 @@ public interface Config {
      * @param path the path
      * @return integer
      */
-    Integer getInteger(String path);
+    int getInteger(String path);
 
     /**
      * Get a boolean

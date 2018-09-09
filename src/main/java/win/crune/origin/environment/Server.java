@@ -15,13 +15,12 @@ public class Server implements Storeable<String> {
     private Set<String> onlinePlayers;
     private int maxPlayers;
     private Set<String> whitelistedPlayers;
-    private State state;
+    private State state = State.OFFLINE;
     private Stage stage;
 
     public Server(String name, String group) {
         this.name = name;
         this.group = group;
-        this.state = State.OFFLINE;
     }
 
     @Override

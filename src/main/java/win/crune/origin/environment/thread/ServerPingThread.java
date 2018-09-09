@@ -48,7 +48,7 @@ public class ServerPingThread extends Thread {
 
             this.redisHandler.getRedisMessenger().sendMessage(new ServerPingMessage(serverHandler.getCurrentServer()));
 
-            if (serverHandler.getCurrentServer().getState() != win.crune.origin.environment.State.ONLINE && (serverHandler.getCurrentServer().getState() != win.crune.origin.environment.State.WHITELISTED && Bukkit.hasWhitelist())) {
+            if (serverHandler.getCurrentServer().getState() != win.crune.origin.environment.State.ONLINE  && !Bukkit.hasWhitelist() || (serverHandler.getCurrentServer().getState() != win.crune.origin.environment.State.WHITELISTED && Bukkit.hasWhitelist())) {
                 this.redisHandler.getRedisMessenger().sendMessage(new ServerChangeStateMessage(serverHandler.getCurrentServer(), Bukkit.hasWhitelist() ? win.crune.origin.environment.State.WHITELISTED : win.crune.origin.environment.State.ONLINE));
             }
         }

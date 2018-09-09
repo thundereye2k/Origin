@@ -2,7 +2,11 @@ package win.crune.origin.database.redis;
 
 import lombok.Getter;
 import redis.clients.jedis.JedisPool;
+import win.crune.origin.Origin;
+import win.crune.origin.environment.ServerHandler;
+import win.crune.origin.environment.State;
 import win.crune.origin.environment.listener.ServerRedisListener;
+import win.crune.origin.environment.message.ServerChangeStateMessage;
 import win.crune.origin.profile.redis.listener.StaffRedisListener;
 import win.crune.origin.handler.Handler;
 import win.crune.redismessenger.RedisManager;
@@ -17,16 +21,17 @@ public class RedisHandler implements Handler {
 
     @Override
     public void onEnable() {
-        this.redisMessenger = new SimpleRedisMessenger();
+        this.redisMessenger = RedisManager.getInstance().getRedisMessenger();
         this.jedisPool = RedisManager.getInstance().getJedisPool(); //TODO authenticate with settings config
-
-        redisMessenger.registerMessages(new StaffRedisListener());
-        redisMessenger.registerMessages(new ServerRedisListener());
     }
 
     @Override
     public void onDisable() {
+        ServerHandler serverHandler = (ServerHandler) Origin.getInstance().getHandlerStore().get("server");
+        serverHandler.getServerPingThread().stop();
 
+        ServerChangeStateMessage serverChangeStateMessage = new ServerChangeStateMessage(serverHandler.getCurrentServer(), State.OFFLINE);
+        redisMessenger.sendMessage(serverChangeStateMessage);
     }
 
     @Override

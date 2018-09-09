@@ -9,12 +9,14 @@ import win.crune.origin.environment.ServerHandler;
 import win.crune.origin.handler.Handler;
 import win.crune.origin.profile.ProfileHandler;
 import win.crune.origin.rank.RankHandler;
+import win.crune.origin.scoreboard.handler.ScoreboardHandler;
 import win.crune.origin.store.Store;
 import win.crune.origin.store.Stores;
 import win.crune.redismessenger.impl.SimpleRedisMessenger;
 import win.crune.redismessenger.messenger.RedisMessenger;
 
-import java.util.Arrays;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Getter
 public class Origin extends JavaPlugin implements OriginAPI {
@@ -33,15 +35,17 @@ public class Origin extends JavaPlugin implements OriginAPI {
         this.redisMessenger = new SimpleRedisMessenger();
 
         Arrays.asList(
-                new ConfigHandler(), new ProfileHandler(),
-                new RedisHandler(), new MongoHandler(),
-                new RankHandler(), new ServerHandler()
+                new ConfigHandler(), new RedisHandler(), new MongoHandler(),
+                new ServerHandler(), new RankHandler(), new ProfileHandler(),
+                new ScoreboardHandler()
         ).forEach(this::registerHandler);
     }
 
     @Override
     public void onDisable() {
-        handlerStore.getAll().forEach(this::unregisterHandler);
+        List<Handler> list = new ArrayList<>(handlerStore.getAll());
+        //Collections.reverse(list);
+        list.forEach(this::unregisterHandler);
     }
 
     @Override

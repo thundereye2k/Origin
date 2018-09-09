@@ -4,6 +4,8 @@ import win.crune.origin.environment.Server;
 import win.crune.origin.profile.Profile;
 import win.crune.redismessenger.message.RedisMessage;
 
+import java.util.UUID;
+
 public class StaffJoinMessage implements RedisMessage {
 
     private Profile profile;

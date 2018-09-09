@@ -6,23 +6,20 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import win.crune.origin.Origin;
-import win.crune.origin.database.redis.RedisHandler;
-import win.crune.origin.environment.ServerHandler;
 import win.crune.origin.event.ProfileJoinEvent;
+import win.crune.origin.event.ProfileQuitEvent;
 import win.crune.origin.profile.Profile;
 import win.crune.origin.profile.ProfileHandler;
+import win.crune.origin.scoreboard.sidebar.Sidebar;
 
 public class PlayerListener implements Listener {
 
     private ProfileHandler profileHandler;
-    private ServerHandler serverHandler;
-    private RedisHandler redisHandler;
 
     public PlayerListener() {
         this.profileHandler = (ProfileHandler) Origin.getInstance().getHandlerStore().get("profile");
-        this.serverHandler = (ServerHandler) Origin.getInstance().getHandlerStore().get("server");
-        this.redisHandler = (RedisHandler) Origin.getInstance().getHandlerStore().get("redis");
     }
 
     @EventHandler
@@ -40,9 +37,21 @@ public class PlayerListener implements Listener {
         Player player = event.getPlayer();
 
         Profile profile = profileHandler.getProfileStore().get(player.getUniqueId());
+        profile.setSidebar(new Sidebar(player));
+        profile.setName(player.getName());
 
         ProfileJoinEvent profileJoinEvent = new ProfileJoinEvent(profile);
         Bukkit.getPluginManager().callEvent(profileJoinEvent);
+    }
+
+    @EventHandler
+    public void onPlayerQuitEvent(PlayerQuitEvent event) {
+        Player player = event.getPlayer();
+
+        Profile profile = profileHandler.getProfileStore().get(player.getUniqueId());
+
+        ProfileQuitEvent profileQuitEvent = new ProfileQuitEvent(profile);
+        Bukkit.getPluginManager().callEvent(profileQuitEvent);
     }
 
 }

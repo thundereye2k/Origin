@@ -131,16 +131,16 @@ public class JsonConfig implements Config {
 
     @Override
     public String getString(String path) {
-        return (String) get(path);
+        return get(path);
     }
 
     @Override
-    public Integer getInteger(String path) {
-        return (int) get(path);
+    public int getInteger(String path) {
+        return Integer.parseInt(getString(path));
     }
 
     @Override
     public Boolean getBoolean(String path) {
-        return (boolean) get(path);
+        return get(path);
     }
 }
