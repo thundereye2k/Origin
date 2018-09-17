@@ -1,18 +1,23 @@
 package win.crune.origin.scoreboard.tablist;
 
 import org.bukkit.entity.Player;
-import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.Scoreboard;
+import win.crune.origin.scoreboard.sidebar.Sidebar;
+
+import java.util.Map;
 
 public class Tablist {
 
+    private Sidebar sidebar;
     private Player player;
-    private Scoreboard scoreboard;
-    private Objective objective;
+    private String header, footer;
 
-    public Tablist(Player player, Scoreboard scoreboard, Objective objective) {
+    public Tablist(Sidebar sidebar, Player player) {
+        this.sidebar = sidebar;
         this.player = player;
-        this.scoreboard = scoreboard;
-        this.objective = objective;
+
+    }
+
+    public void update(Map<Integer, String> lines) {
+
     }
 }

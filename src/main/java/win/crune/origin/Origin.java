@@ -15,8 +15,9 @@ import win.crune.origin.store.Stores;
 import win.crune.redismessenger.impl.SimpleRedisMessenger;
 import win.crune.redismessenger.messenger.RedisMessenger;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Arrays;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ForkJoinPool;
 
 @Getter
 public class Origin extends JavaPlugin implements OriginAPI {
@@ -26,6 +27,7 @@ public class Origin extends JavaPlugin implements OriginAPI {
 
     private Store<Handler> handlerStore;
     private RedisMessenger redisMessenger;
+    private ExecutorService executorService;
 
     @Override
     public void onEnable() {
@@ -33,19 +35,22 @@ public class Origin extends JavaPlugin implements OriginAPI {
 
         this.handlerStore = Stores.newNamedStore();
         this.redisMessenger = new SimpleRedisMessenger();
+        this.executorService = new ForkJoinPool(Runtime.getRuntime().availableProcessors());
 
+        /* Register handlers, order is very specific because some handlers depend on each other */
         Arrays.asList(
                 new ConfigHandler(), new RedisHandler(), new MongoHandler(),
                 new ServerHandler(), new RankHandler(), new ProfileHandler(),
                 new ScoreboardHandler()
         ).forEach(this::registerHandler);
+
+        /* Load ranks */
+        ((RankHandler) getHandlerStore().get("rank")).loadRanks((MongoHandler) getHandlerStore().get("mongo"));
     }
 
     @Override
     public void onDisable() {
-        List<Handler> list = new ArrayList<>(handlerStore.getAll());
-        //Collections.reverse(list);
-        list.forEach(this::unregisterHandler);
+        handlerStore.getAll().forEach(this::unregisterHandler);
     }
 
     @Override

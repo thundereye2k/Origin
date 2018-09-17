@@ -5,18 +5,17 @@ import redis.clients.jedis.JedisPool;
 import win.crune.origin.Origin;
 import win.crune.origin.environment.ServerHandler;
 import win.crune.origin.environment.State;
-import win.crune.origin.environment.listener.ServerRedisListener;
 import win.crune.origin.environment.message.ServerChangeStateMessage;
-import win.crune.origin.profile.redis.listener.StaffRedisListener;
 import win.crune.origin.handler.Handler;
 import win.crune.redismessenger.RedisManager;
-import win.crune.redismessenger.impl.SimpleRedisMessenger;
 import win.crune.redismessenger.messenger.RedisMessenger;
 
-@Getter
 public class RedisHandler implements Handler {
 
+    @Getter
     private RedisMessenger redisMessenger;
+
+    @Getter
     private JedisPool jedisPool;
 
     @Override

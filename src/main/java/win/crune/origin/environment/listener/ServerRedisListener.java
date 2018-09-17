@@ -26,8 +26,6 @@ public class ServerRedisListener implements RedisListener {
     public void onServerChangeStateMessage(RedisMessage redisMessage) {
         String[] args = redisMessage.getMessage();
 
-        System.out.println("received change: " + Arrays.asList(args).toString());
-
         Server server = this.serverHandler.getServer(args[0], args[1]);
 
         if (server == null) {
@@ -41,7 +39,7 @@ public class ServerRedisListener implements RedisListener {
         String message =
                 "&6[Server Manager] &fServer " + server.getName() + " is now &e" + server.getState() + "&f...";
 
-        Bukkit.broadcastMessage(Chat.color(message));
+        Bukkit.broadcast(Chat.color(message), "origin.alert.server");
     }
 
     @RedisHandler(name = "server-ping")

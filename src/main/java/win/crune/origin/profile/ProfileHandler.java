@@ -12,9 +12,9 @@ import win.crune.origin.store.Stores;
 
 import java.util.UUID;
 
-@Getter
 public class ProfileHandler implements Handler {
 
+    @Getter
     private Store<Profile> profileStore;
 
     @Override
@@ -27,7 +27,6 @@ public class ProfileHandler implements Handler {
 
     @Override
     public void onDisable() {
-
     }
 
     public Profile getOfflineProfile(UUID uuid) {

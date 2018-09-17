@@ -5,6 +5,9 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import win.crune.origin.profile.Profile;
 
+/**
+ * Profile event
+ */
 public class ProfileEvent extends Event {
 
     @Getter

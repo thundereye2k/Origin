@@ -4,6 +4,9 @@ import lombok.Getter;
 import org.bukkit.event.HandlerList;
 import win.crune.origin.profile.Profile;
 
+/**
+ * Called when a profile quits the server
+ */
 public class ProfileQuitEvent extends ProfileEvent {
 
     @Getter

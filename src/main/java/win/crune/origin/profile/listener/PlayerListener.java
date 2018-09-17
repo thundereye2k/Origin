@@ -8,6 +8,7 @@ import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import win.crune.origin.Origin;
+import win.crune.origin.database.mongo.MongoHandler;
 import win.crune.origin.event.ProfileJoinEvent;
 import win.crune.origin.event.ProfileQuitEvent;
 import win.crune.origin.profile.Profile;
@@ -17,9 +18,11 @@ import win.crune.origin.scoreboard.sidebar.Sidebar;
 public class PlayerListener implements Listener {
 
     private ProfileHandler profileHandler;
+    private MongoHandler mongoHandler;
 
     public PlayerListener() {
         this.profileHandler = (ProfileHandler) Origin.getInstance().getHandlerStore().get("profile");
+        this.mongoHandler = (MongoHandler) Origin.getInstance().getHandlerStore().get("mongo");
     }
 
     @EventHandler
@@ -30,6 +33,8 @@ public class PlayerListener implements Listener {
             profile = new Profile(event.getUniqueId());
             profileHandler.getProfileStore().add(profile);
         }
+
+        mongoHandler.load(profile, "profiles");
     }
 
     @EventHandler
@@ -52,6 +57,12 @@ public class PlayerListener implements Listener {
 
         ProfileQuitEvent profileQuitEvent = new ProfileQuitEvent(profile);
         Bukkit.getPluginManager().callEvent(profileQuitEvent);
+
+        profileHandler.getProfileStore().remove(profile);
+
+        Origin.getInstance().getExecutorService().submit(() -> {
+            mongoHandler.save(profile, "profiles");
+        });
     }
 
 }

@@ -6,16 +6,37 @@ import win.crune.origin.store.Storeable;
 
 import java.util.Set;
 
-@Getter
-@Setter
+/**
+ * Server class
+ */
 public class Server implements Storeable<String> {
 
+    @Getter
+    @Setter
     private String name;
+
+    @Getter
+    @Setter
     private String group;
+
+    @Getter
+    @Setter
     private Set<String> onlinePlayers;
+
+    @Getter
+    @Setter
     private int maxPlayers;
+
+    @Getter
+    @Setter
     private Set<String> whitelistedPlayers;
+
+    @Getter
+    @Setter
     private State state = State.OFFLINE;
+
+    @Getter
+    @Setter
     private Stage stage;
 
     public Server(String name, String group) {

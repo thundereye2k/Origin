@@ -3,6 +3,7 @@ package win.crune.origin.scoreboard.thread;
 import win.crune.origin.Origin;
 import win.crune.origin.profile.Profile;
 import win.crune.origin.profile.ProfileHandler;
+import win.crune.origin.profile.setting.Setting;
 import win.crune.origin.scoreboard.sidebar.provider.SidebarProvider;
 
 import java.util.concurrent.TimeUnit;
@@ -26,6 +27,7 @@ public class ScoreboardThread extends Thread {
                 e.printStackTrace();
             }
 
+            /* Iterate through online profiles and update their sidebar */
             profileHandler.getProfileStore().getAll().stream().filter(Profile::isOnline).forEach(profile -> {
                 if (profile.getSettingStore().get("sidebar").isEnabled()) {
 

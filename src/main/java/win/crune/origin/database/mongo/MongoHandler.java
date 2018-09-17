@@ -3,7 +3,14 @@ package win.crune.origin.database.mongo;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.ReplaceOptions;
+import com.mongodb.client.model.UpdateOptions;
+import com.mongodb.operation.UpdateOperation;
 import lombok.Getter;
+import org.bson.Document;
 import win.crune.origin.Origin;
 import win.crune.origin.config.Config;
 import win.crune.origin.config.ConfigHandler;
@@ -16,6 +23,7 @@ import java.util.List;
 public class MongoHandler implements Handler {
 
     private MongoClient mongoClient;
+    private MongoDatabase mongoDatabase;
 
     @Override
     public void onEnable() {
@@ -39,13 +47,33 @@ public class MongoHandler implements Handler {
             this.mongoClient = new MongoClient(host, port);
         }
 
-        mongoClient.getDatabase(database);
+        this.mongoDatabase = mongoClient.getDatabase(database);
     }
 
     @Override
     public void onDisable() {
         mongoClient.close();
     }
+
+    public void save(Mongoable mongoable, String collection) {
+        MongoCollection<Document> mongoCollection = mongoDatabase.getCollection(collection);
+        Document document = new Document("uuid", mongoable.getId().toString());
+        document.putAll(mongoable.toDocument());
+
+        mongoCollection.updateOne(Filters.eq("uuid", mongoable.getId().toString()), document, new UpdateOptions().upsert(true));
+    }
+
+    public void load(Mongoable mongoable, String collection) {
+        MongoCollection<Document> mongoCollection = mongoDatabase.getCollection(collection);
+        Document document = mongoCollection.find(Filters.eq("uuid", mongoable.getId().toString())).first();
+
+        if (document == null) {
+            return;
+        }
+
+        mongoable.fromDocument(document);
+    }
+
 
     @Override
     public String getId() {

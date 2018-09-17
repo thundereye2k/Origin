@@ -33,7 +33,7 @@ public class StaffRedisListener implements RedisListener {
             profile = profileHandler.getOfflineProfile(UUID.fromString(args[0]));
         }
 
-        String message = "&9[Staff] &b" + profile.getName() + " has joined " + server.getName() + ".";
-        Bukkit.broadcastMessage(Chat.color(message));
+        String message = "&9[Staff] &b" + profile.getName() + " has joined " + server.getGroup() + " &7(" + server.getName() + ")&b.";
+        Bukkit.broadcast(Chat.color(message), "origin.staff");
     }
 }

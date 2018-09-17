@@ -22,7 +22,9 @@ public class ServerHandler implements Handler {
 
     @Getter
     private Server currentServer;
+
     private Set<Store<Server>> serverMap;
+
     @Getter
     private ServerPingThread serverPingThread;
 
@@ -75,6 +77,10 @@ public class ServerHandler implements Handler {
         });
 
         return toReturn;
+    }
+
+    public Set<Store<Server>> getServerMap() {
+        return ImmutableSet.copyOf(serverMap);
     }
 
     public Server getServer(String group, String name) {

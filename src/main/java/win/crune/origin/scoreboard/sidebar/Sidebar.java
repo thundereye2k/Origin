@@ -1,7 +1,9 @@
 package win.crune.origin.scoreboard.sidebar;
 
 import com.google.common.collect.Lists;
+import lombok.Getter;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
@@ -9,20 +11,21 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 import win.crune.origin.chat.Chat;
 
-import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 
 public class Sidebar {
 
-    private Player player;
+    @Getter
     private Scoreboard scoreboard;
+
+    @Getter
     private Objective objective;
 
     private List<String> oldEntries;
 
     public Sidebar(Player player) {
-        this.player = player;
         this.scoreboard = player.getScoreboard();
 
         if (scoreboard == Bukkit.getScoreboardManager().getMainScoreboard()) {
@@ -33,15 +36,15 @@ public class Sidebar {
 
         this.oldEntries = Lists.newArrayList();
 
+        /* Register a team for each sidebar line */
         IntStream.range(0, 16).forEach(i -> {
-            SidebarEntry entry = new SidebarEntry("&r", i);
             Team team = scoreboard.getTeam("\u0000s" + i);
 
             if (team == null) {
                 team = scoreboard.registerNewTeam("\u0000s" + i);
             }
 
-            team.addEntry(entry.getName());
+            team.addEntry(ChatColor.values()[i].toString());
         });
 
         this.objective = scoreboard.getObjective("origin");
@@ -62,40 +65,48 @@ public class Sidebar {
     }
 
     public void update(List<String> entries) {
-        //Collections.reverse(entries);
+        while (entries.size() > 15) {
+            entries.remove(entries.size() - 1);
+        }
 
-        int[] i = {0};
-        int[] j = {entries.size()};
-
-        if (j[0] < 15) {
-            for (int l = oldEntries.size(); l > entries.size(); l--) {
-                SidebarEntry sidebarEntry = new SidebarEntry(oldEntries.get(l - 1), l);
-                scoreboard.resetScores(sidebarEntry.getName());
+        /* Remove old entries */
+        AtomicInteger slot = new AtomicInteger(entries.size());
+        if (slot.get() < 15) {
+            for (int i = oldEntries.size(); i > entries.size(); i--) {
+                scoreboard.resetScores(ChatColor.values()[i].toString());
             }
         }
 
-        entries.forEach(s -> {
-            SidebarEntry sidebarEntry = new SidebarEntry(Chat.color(s), i[0]);
-            Team team = scoreboard.getTeam("\u0000s" + i[0]);
+        /* Iterate through the entries and update teams prefix/suffix */
+        entries.forEach(line -> {
+            Team team = scoreboard.getTeam("\u0000s" + slot.get());
 
-            try {
-                SidebarEntry oldEntry = new SidebarEntry(oldEntries.get(i[0]), i[0]);
+            String[] prefixSuffix = getPrefixSuffix(ChatColor.translateAlternateColorCodes('&', line));
 
-                if (!oldEntry.getName().equals(sidebarEntry.getName())) {
-                    team.addEntry(sidebarEntry.getName());
-                }
-            } catch (IndexOutOfBoundsException e) {
-                team.addEntry(sidebarEntry.getName());
-            }
+            team.setPrefix(prefixSuffix[0]);
+            team.setSuffix(prefixSuffix[1]);
 
-            team.setPrefix(sidebarEntry.getPrefix());
-            team.setSuffix(sidebarEntry.getSuffix());
-            objective.getScore(sidebarEntry.getName()).setScore(j[0]);
-
-            i[0]++;
-            j[0]--;
+            objective.getScore(ChatColor.values()[slot.get()].toString()).setScore(slot.get());
+            slot.getAndDecrement();
         });
 
         this.oldEntries = entries;
+    }
+
+    private String[] getPrefixSuffix(String string) {
+        String prefix = getPrefix(string);
+        String suffix = getPrefix(ChatColor.getLastColors(prefix) + getSuffix(string));
+
+        return new String[]{prefix, suffix};
+    }
+
+    private String getPrefix(String string) {
+        return string.length() > 16 ? string.substring(0, 16) : string;
+    }
+
+    private String getSuffix(String string) {
+        string = string.length() > 32 ? string.substring(0, 32) : string;
+
+        return string.length() > 16 ? string.substring(16) : "";
     }
 }

@@ -5,6 +5,9 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import win.crune.origin.profile.Profile;
 
+/**
+ * Called when a profile joins the server
+ */
 public class ProfileJoinEvent extends ProfileEvent {
 
     @Getter

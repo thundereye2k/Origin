@@ -5,13 +5,19 @@ import lombok.Getter;
 import lombok.Setter;
 import win.crune.origin.store.Storeable;
 
-@Getter
-@Setter
 @AllArgsConstructor
 public class Setting implements Storeable<String> {
 
+    @Getter
+    @Setter
     private String value;
+
+    @Getter
+    @Setter
     private boolean enabled;
+
+    @Getter
+    @Setter
     private String description;
 
     @Override
