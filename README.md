@@ -10,10 +10,13 @@ Inspired by [joeleoli](https://github.com/joeleoli)'s Nucleus.
 * Handler system
 * Events
 * Command framework
-* Redis server environment caching
+* Redis server environment caching, server manager
 * Mongodb integration
 * Staffutilities, staffmode, staff messages
 * Utilizing my [Redis-Messenger](https://github.com/crunesmh/Redis-Messenger) API
+* Chat channels
+* Profile, custom settings
+* Menu/GUI system
 * More coming soon
 
 ## Dependencies
@@ -22,7 +25,7 @@ Inspired by [joeleoli](https://github.com/joeleoli)'s Nucleus.
 * [**Mongo**](https://github.com/mongodb/mongo) - The MongoDB Database.
 * [**Google Gson**](https://github.com/google/gson) - A Java serialization/deserialization library to convert Java Objects into JSON and back.
 
-## API
+## API Documentation
 Coming soon...
 
 ### Build
