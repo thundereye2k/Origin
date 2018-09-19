@@ -1,11 +1,19 @@
 package win.crune.origin.profile;
 
+import com.google.common.collect.Sets;
 import lombok.Getter;
 import lombok.Setter;
 import org.bson.Document;
 import org.bukkit.Bukkit;
+import org.bukkit.Server;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.permissions.Permission;
+import org.bukkit.permissions.PermissionAttachment;
+import org.bukkit.permissions.PermissionAttachmentInfo;
+import org.bukkit.plugin.Plugin;
 import win.crune.origin.Origin;
+import win.crune.origin.chat.channel.Audience;
 import win.crune.origin.database.mongo.Mongoable;
 import win.crune.origin.profile.setting.Setting;
 import win.crune.origin.rank.Rank;
@@ -20,7 +28,7 @@ import java.util.Arrays;
 import java.util.Set;
 import java.util.UUID;
 
-public class Profile implements Mongoable {
+public class Profile implements Mongoable, CommandSender {
 
     @Getter
     @Setter
@@ -58,10 +66,15 @@ public class Profile implements Mongoable {
     @Setter
     private boolean online;
 
+    @Getter
+    @Setter
+    private Audience<Profile> audience;
+
     public Profile(UUID uuid) {
         this.uuid = uuid;
-
         this.settingStore = Stores.newNamedStore();
+        settingStore.add(new Setting("sidebar", true, "Do you want to see your sidebar?"));
+        this.permissions = Sets.newHashSet();
     }
 
     @Override
@@ -116,5 +129,85 @@ public class Profile implements Mongoable {
             setting.setEnabled(Boolean.valueOf(values[0]));
             setting.setDescription(values[1]);
         });
+    }
+
+    @Override
+    public void sendMessage(String message) {
+        getPlayer().sendMessage(message);
+    }
+
+    @Override
+    public void sendMessage(String[] messages) {
+        getPlayer().sendMessage(messages);
+    }
+
+    @Override
+    public Server getServer() {
+        return getPlayer().getServer();
+    }
+
+    @Override
+    public boolean isPermissionSet(String name) {
+        return getPlayer().isPermissionSet(name);
+    }
+
+    @Override
+    public boolean isPermissionSet(Permission perm) {
+        return getPlayer().isPermissionSet(perm);
+    }
+
+    @Override
+    public boolean hasPermission(String name) {
+        return getPlayer().hasPermission(name);
+    }
+
+    @Override
+    public boolean hasPermission(Permission perm) {
+        return getPlayer().hasPermission(perm);
+    }
+
+    @Override
+    public PermissionAttachment addAttachment(Plugin plugin, String name, boolean value) {
+        return getPlayer().addAttachment(plugin, name, value);
+    }
+
+    @Override
+    public PermissionAttachment addAttachment(Plugin plugin) {
+        return getPlayer().addAttachment(plugin);
+    }
+
+    @Override
+    public PermissionAttachment addAttachment(Plugin plugin, String name, boolean value, int ticks) {
+        return getPlayer().addAttachment(plugin, name, value, ticks);
+    }
+
+    @Override
+    public PermissionAttachment addAttachment(Plugin plugin, int ticks) {
+        return getPlayer().addAttachment(plugin, ticks);
+    }
+
+    @Override
+    public void removeAttachment(PermissionAttachment attachment) {
+        getPlayer().removeAttachment(attachment);
+    }
+
+    @Override
+    public void recalculatePermissions() {
+        getPlayer().recalculatePermissions();
+    }
+
+    @Override
+    public Set<PermissionAttachmentInfo> getEffectivePermissions() {
+        return getPlayer().getEffectivePermissions();
+    }
+
+    @Override
+    public boolean isOp() {
+        return getPlayer().isOp();
+    }
+
+    @Override
+    public void setOp(boolean value) {
+        getPlayer().setOp(value);
     }
 }

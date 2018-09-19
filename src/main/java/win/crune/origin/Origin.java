@@ -2,6 +2,7 @@ package win.crune.origin;
 
 import lombok.Getter;
 import org.bukkit.plugin.java.JavaPlugin;
+import win.crune.origin.chat.channel.handler.ChannelHandler;
 import win.crune.origin.config.ConfigHandler;
 import win.crune.origin.database.mongo.MongoHandler;
 import win.crune.origin.database.redis.RedisHandler;
@@ -40,12 +41,12 @@ public class Origin extends JavaPlugin implements OriginAPI {
         /* Register handlers, order is very specific because some handlers depend on each other */
         Arrays.asList(
                 new ConfigHandler(), new RedisHandler(), new MongoHandler(),
-                new ServerHandler(), new RankHandler(), new ProfileHandler(),
-                new ScoreboardHandler()
+                new ServerHandler(), new ProfileHandler(), new RankHandler(),
+                new ScoreboardHandler(), new ChannelHandler()
         ).forEach(this::registerHandler);
 
         /* Load ranks */
-        ((RankHandler) getHandlerStore().get("rank")).loadRanks((MongoHandler) getHandlerStore().get("mongo"));
+        //((RankHandler) getHandlerStore().get("rank")).loadRanks((MongoHandler) getHandlerStore().get("mongo"));
     }
 
     @Override

@@ -66,7 +66,7 @@ public class Rank implements Mongoable {
         try {
             this.inherited = rankHandler.getRankStore().get(UUID.fromString(document.getString("inherited")));
         } catch (IllegalArgumentException e) {
-            //ignore
+            /* Ignore, exception will be thrown when inherited is null*/
         }
 
         String permissions = document.getString("permissions");

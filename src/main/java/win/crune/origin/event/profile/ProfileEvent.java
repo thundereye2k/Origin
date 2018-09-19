@@ -1,4 +1,4 @@
-package win.crune.origin.event;
+package win.crune.origin.event.profile;
 
 import lombok.Getter;
 import org.bukkit.event.Event;

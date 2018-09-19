@@ -1,18 +1,18 @@
-package win.crune.origin.event;
+package win.crune.origin.event.profile;
 
 import lombok.Getter;
 import org.bukkit.event.HandlerList;
 import win.crune.origin.profile.Profile;
 
 /**
- * Called when a profile quits the server
+ * Called when a profile joins the server
  */
-public class ProfileQuitEvent extends ProfileEvent {
+public class ProfileJoinEvent extends ProfileEvent {
 
     @Getter
     private static final HandlerList handlerList = new HandlerList();
 
-    public ProfileQuitEvent(Profile profile) {
+    public ProfileJoinEvent(Profile profile) {
         super(profile);
     }
 

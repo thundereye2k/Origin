@@ -33,17 +33,22 @@ public class MongoHandler implements Handler {
         String host = settingsConfig.getString("databases.mongo.host");
         int port = settingsConfig.getInteger("databases.mongo.port");
         String database = settingsConfig.getString("databases.mongo.database");
+        boolean authenticate = Boolean.parseBoolean(settingsConfig.getString("databases.mongo.authenticate"));
 
-        try {
-            String username = settingsConfig.getString("databases.mongo.username");
-            String password = settingsConfig.getString("databases.mongo.password");
+        if (authenticate) {
+            try {
+                String username = settingsConfig.getString("databases.mongo.username");
+                String password = settingsConfig.getString("databases.mongo.password");
 
-            List<MongoCredential> list = Collections.singletonList(
-                    MongoCredential.createCredential(username, database, password.toCharArray())
-            );
+                List<MongoCredential> list = Collections.singletonList(
+                        MongoCredential.createCredential(username, database, password.toCharArray())
+                );
 
-            this.mongoClient = new MongoClient(new ServerAddress(host, port), list);
-        } catch (Exception e) {
+                this.mongoClient = new MongoClient(new ServerAddress(host, port), list);
+            } catch (Exception e) {
+                this.mongoClient = new MongoClient(host, port);
+            }
+        } else {
             this.mongoClient = new MongoClient(host, port);
         }
 
@@ -60,7 +65,7 @@ public class MongoHandler implements Handler {
         Document document = new Document("uuid", mongoable.getId().toString());
         document.putAll(mongoable.toDocument());
 
-        mongoCollection.updateOne(Filters.eq("uuid", mongoable.getId().toString()), document, new UpdateOptions().upsert(true));
+        mongoCollection.replaceOne(Filters.eq("uuid", mongoable.getId().toString()), document, new ReplaceOptions().upsert(true));
     }
 
     public void load(Mongoable mongoable, String collection) {
